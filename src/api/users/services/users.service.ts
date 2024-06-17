@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UsersRepository } from './users.repository';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { UsersRepository } from '../db/users.repository';
 import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
-import { User } from './entities/user.entity';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +12,7 @@ export class UsersService {
   //유저 회원가입
   async register(inputData: CreateUserDto) {
     try {
-      const duplicateCheck = await this.idDuplicateCheck(inputData.account);
+      const duplicateCheck = await this.idCheck(inputData.account);
       if (duplicateCheck === '중복된 아이디입니다.')
         throw new BadRequestException('중복된 아이디입니다.');
       //비밀번호 암호화
@@ -26,9 +26,9 @@ export class UsersService {
     }
   }
   //중복 아이디 체크
-  async idDuplicateCheck(account: string) {
+  async idCheck(account: string) {
     try {
-      const duplicated = await this.usersRepo.idDuplicateCheck(account);
+      const duplicated = await this.usersRepo.idCheck(account);
       if (duplicated === null) return '사용 가능한 아이디입니다.';
       else return '중복된 아이디입니다.';
     } catch (e) {

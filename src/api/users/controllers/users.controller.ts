@@ -10,9 +10,9 @@ import {
   UseInterceptors,
   HttpException,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from '../services/users.service';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { HttpExceptionFilter } from 'src/common/exceptions/http-exception.filter';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { ApiTags } from '@nestjs/swagger';
@@ -23,6 +23,7 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+  //회원가입
   @Post('register')
   async register(@Body() inputData: CreateUserDto) {
     try {
@@ -33,11 +34,11 @@ export class UsersController {
       throw new HttpException(e.message, e.status || 500);
     }
   }
-
+  //아이디 중복체크
   @Get('id-check/:account')
   async idDuplicateCheck(@Param('account') account: string) {
     try {
-      const result = await this.usersService.idDuplicateCheck(account);
+      const result = await this.usersService.idCheck(account);
       return result;
     } catch (e) {
       console.log(e.stack || e.message);
