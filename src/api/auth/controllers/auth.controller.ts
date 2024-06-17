@@ -44,4 +44,20 @@ export class AuthController {
       throw new HttpException(e.message, e.status || 500);
     }
   }
+
+  @ApiTags('AUTH')
+  @Post('/logout')
+  @ApiOperation({
+    summary: '로그아웃',
+    description: '로그아웃',
+  })
+  signOut(@Res({ passthrough: true }) res: Response) {
+    try {
+      res.clearCookie('refreshToken');
+      return '로그아웃 되었습니다.';
+    } catch (e) {
+      console.log(e.stack || e.message);
+      throw new HttpException(e.message, e.status || 500);
+    }
+  }
 }

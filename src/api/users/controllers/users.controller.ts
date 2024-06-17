@@ -9,16 +9,21 @@ import {
   UseFilters,
   UseInterceptors,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { HttpExceptionFilter } from 'src/common/exceptions/http-exception.filter';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/api/auth/roles.decorator';
+import { RolesGuard } from 'src/api/auth/roles.guard';
 
 @UseFilters(HttpExceptionFilter)
 @UseInterceptors(SuccessInterceptor)
+@ApiBearerAuth()
 @ApiTags('USERS')
 @Controller('users')
 export class UsersController {
@@ -35,6 +40,8 @@ export class UsersController {
     }
   }
   //아이디 중복체크
+  @UseGuards(AuthGuard('access'), RolesGuard)
+  @Roles('user')
   @Get('id-check/:account')
   async idDuplicateCheck(@Param('account') account: string) {
     try {

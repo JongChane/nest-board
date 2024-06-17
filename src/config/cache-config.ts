@@ -9,7 +9,6 @@ export class CacheConfig implements CacheOptionsFactory {
       store: redisStore,
       host: 'localhost',
       port: 6379,
-      ttl: 60,
     };
     return config;
   }

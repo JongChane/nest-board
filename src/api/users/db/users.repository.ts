@@ -38,7 +38,7 @@ export class UsersRepository {
         .createQueryBuilder('user')
         .addSelect('user.password')
         .where('user.account = :account', { account })
-        .getRawOne();
+        .getOne();
       return result;
     } catch (error) {
       console.log(error.stack || error.message);

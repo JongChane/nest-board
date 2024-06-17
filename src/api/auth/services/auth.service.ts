@@ -24,7 +24,8 @@ export class AuthService {
       const valid = await bcrypt.compare(inputData.password, dbUser.password);
       if (!valid)
         throw new BadRequestException('아이디 혹은 비밀번호를 확인해주세요.');
-      await this.cacheManager.set(inputData.account, session_id);
+      await this.cacheManager.set(inputData.account, session_id, { ttl: 3600 });
+      console.log(dbUser);
       console.log(await this.cacheManager.get(inputData.account));
       const payload: JwtUserDto = {
         user_idx: dbUser.user_idx,

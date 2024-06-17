@@ -5,7 +5,7 @@ import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { JwtAdminDto, JwtUserDto } from './dto/jwt-dto';
 import { Request } from 'express';
 @Injectable()
-export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'refresh') {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([

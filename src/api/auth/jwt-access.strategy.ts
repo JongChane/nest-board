@@ -26,6 +26,9 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
       }
     } else if (payload.roles === 'user') {
       const sessionId = await this.cacheManager.get(payload.account);
+      console.log(payload);
+      console.log('세션아이디' + sessionId);
+      console.log('페이로드' + payload.session_id);
       if (!sessionId || sessionId !== payload.session_id) {
         //payload에 있는 sessionId값과 맵객체로 저장해둔 sessionId값 비교후 같지 않을 경우 401 에러 발생시킴.
         throw new UnauthorizedException({
