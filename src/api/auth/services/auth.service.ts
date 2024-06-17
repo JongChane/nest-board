@@ -25,8 +25,6 @@ export class AuthService {
       if (!valid)
         throw new BadRequestException('아이디 혹은 비밀번호를 확인해주세요.');
       await this.cacheManager.set(inputData.account, session_id, { ttl: 3600 });
-      console.log(dbUser);
-      console.log(await this.cacheManager.get(inputData.account));
       const payload: JwtUserDto = {
         user_idx: dbUser.user_idx,
         account: dbUser.account,
@@ -63,6 +61,14 @@ export class AuthService {
         expiresIn: '1d',
       });
       return token;
+    } catch (e) {
+      throw e;
+    }
+  }
+  //로그아웃
+  async logout(user: JwtUserDto | JwtAdminDto) {
+    try {
+      await this.cacheManager.del(user.account);
     } catch (e) {
       throw e;
     }

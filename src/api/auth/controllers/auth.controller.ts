@@ -6,14 +6,17 @@ import {
   Req,
   Res,
   UseFilters,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { HttpExceptionFilter } from 'src/common/exceptions/http-exception.filter';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { Request, Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../roles.guard';
 
 @UseInterceptors(SuccessInterceptor)
 @UseFilters(HttpExceptionFilter)
@@ -46,14 +49,17 @@ export class AuthController {
   }
 
   @ApiTags('AUTH')
-  @Post('/logout')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('access'), RolesGuard)
+  @Post('logout')
   @ApiOperation({
     summary: '로그아웃',
     description: '로그아웃',
   })
-  signOut(@Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     try {
       res.clearCookie('refreshToken');
+      await this.authService.logout(req.user);
       return '로그아웃 되었습니다.';
     } catch (e) {
       console.log(e.stack || e.message);
