@@ -15,7 +15,7 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get<{ roles: string[]; level?: number }>(
+    const roles = this.reflector.get<{ roles: string[] }>(
       ROLES_KEY,
       context.getHandler(),
     );
@@ -30,10 +30,6 @@ export class RolesGuard implements CanActivate {
       roles.roles &&
       !roles.roles.some((role) => user.roles?.includes(role))
     ) {
-      throw new ForbiddenException('접근 권한이 없습니다.');
-    }
-
-    if (roles.level && user.level < roles.level) {
       throw new ForbiddenException('접근 권한이 없습니다.');
     }
     return true;

@@ -3,36 +3,21 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { JwtAdminDto, JwtUserDto } from './dto/jwt-dto';
+import { Request } from 'express';
 @Injectable()
 export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request) => {
-          console.log(request.headers);
-          if ('x-refresh-token' in request.headers) {
-            //앱의 경우 헤더에서 리프레시 토큰 검증
-            const HeadersRefreshToken = request.headers[
-              'x-refresh-token'
-            ] as string;
-            if (!HeadersRefreshToken)
-              throw new UnauthorizedException({
-                message: '리프레시 토큰이 존재하지 않습니다.',
-                customCode: 'ref_error',
-              });
-            const RefreshToken = HeadersRefreshToken.replace('Bearer ', '');
-            return RefreshToken;
-          } else {
-            //웹의 경우 쿠키에서 리프레시 토큰 검증
-            const CookiesRefreshToken = request.cookies.refreshToken;
-            if (!CookiesRefreshToken)
-              throw new UnauthorizedException({
-                message: '쿠키에 리프레시 토큰이 없습니다.',
-                customCode: 'ref_error',
-              });
-            const RefreshToken = CookiesRefreshToken.replace('Bearer ', '');
-            return RefreshToken;
-          }
+        (request: Request) => {
+          const CookiesRefreshToken = request.cookies.refreshToken;
+          if (!CookiesRefreshToken)
+            throw new UnauthorizedException({
+              message: '쿠키에 리프레시 토큰이 없습니다.',
+              customCode: 'ref_error',
+            });
+          const RefreshToken = CookiesRefreshToken.replace('Bearer ', '');
+          return RefreshToken;
         },
       ]),
       secretOrKey: process.env.JWT_REFRESH_SECRET,
