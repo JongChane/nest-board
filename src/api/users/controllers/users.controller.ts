@@ -40,7 +40,6 @@ export class UsersController {
     }
   }
   //아이디 중복체크
-  @UseGuards(AuthGuard('access'), RolesGuard)
   @Roles('user')
   @Get('id-check/:account')
   async idDuplicateCheck(@Param('account') account: string) {
