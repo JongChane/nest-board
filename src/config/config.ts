@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { Board } from 'src/api/boards/entities/board.entity';
 import { User } from 'src/api/users/entities/user.entity';
 dotenv.config({ path: '.env' });
 
@@ -9,6 +10,6 @@ export const roll = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PW,
   database: 'test',
-  entities: [User],
+  entities: [User, Board],
   synchronize: true,
 };
