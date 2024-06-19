@@ -1,9 +1,11 @@
+import { Board } from 'src/api/boards/entities/board.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  OneToMany,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
@@ -12,7 +14,10 @@ import {
 @Unique(['account'])
 export class User {
   @PrimaryGeneratedColumn()
-  user_idx: number;
+  user_id: number;
+
+  @OneToMany(()=> Board, (board) => board.user)
+  boards: Board[];
 
   @Column()
   account: string;

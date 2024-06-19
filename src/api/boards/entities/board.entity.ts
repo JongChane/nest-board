@@ -1,3 +1,4 @@
+import { User } from 'src/api/users/entities/user.entity';
 import {
     Column,
     CreateDateColumn,
@@ -5,16 +6,22 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Unique,
+    ManyToOne,
+    JoinColumn,
     UpdateDateColumn,
   } from 'typeorm';
   
 @Entity()
 export class Board {
     @PrimaryGeneratedColumn()
-    board_idx: number;
+    board_id: number;
+    
+    @ManyToOne(() => User, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
     @Column()
-    user_idx: number;
+    user_id: number;
 
     @Column()
     title: string;

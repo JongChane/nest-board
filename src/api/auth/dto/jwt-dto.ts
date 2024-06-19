@@ -1,5 +1,5 @@
 export type JwtUserDto = {
-  user_idx: number;
+  user_id: number;
   account: string;
   name: string;
   roles: string;
@@ -7,7 +7,7 @@ export type JwtUserDto = {
 };
 
 export type JwtAdminDto = {
-  admin_idx: number;
+  admin_id: number;
   account: string;
   name: string;
   roles: string;

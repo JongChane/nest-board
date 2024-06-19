@@ -44,7 +44,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
     }
     if (payload.roles && payload.roles.includes('user')) {
       return {
-        user_idx: (payload as JwtUserDto).user_idx,
+        user_id: (payload as JwtUserDto).user_id,
         account: payload.account,
         name: payload.name,
         roles: payload.roles,
@@ -52,7 +52,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
       };
     } else if (payload.roles && payload.roles.includes('admin')) {
       return {
-        admin_idx: (payload as JwtAdminDto).admin_idx,
+        admin_id: (payload as JwtAdminDto).admin_id,
         account: payload.account,
         name: payload.name,
         roles: payload.roles,
